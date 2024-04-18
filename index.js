@@ -23,7 +23,7 @@ main().catch((err) => console.log(err));
 console.log("process.env.MONGO_URL", process.env.MONGO_URL);
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/ecommerce");
+  await mongoose.connect("mongodb+srv://Hackers96:EK5jqqC4Tcysu6OX@cluster0.vav7opp.mongodb.net/ecommerce");
   console.log("Database Connected Successfully");
 }
 
@@ -50,9 +50,9 @@ server.use(express.urlencoded());
 server.use(morgan("default"));
 server.use(express.static(process.env.PUBLIC_DIR));
 server.use("/location", auth, geoLocationRouter.router);
+server.use("/auth", authRouter.router);
 server.use("/products", auth, productRouter.router);
 server.use("/products/ratings", auth, ratingReviewsRouter.router);
-server.use("/auth", authRouter.router);
 
 server.listen(process.env.PORT, () => {
   console.log(`Server Started Successfully on port ${process.env.PORT}`);
