@@ -50,9 +50,9 @@ server.use(express.urlencoded());
 server.use(morgan("default"));
 server.use(express.static(process.env.PUBLIC_DIR));
 server.use("/location", auth, geoLocationRouter.router);
-server.use("/auth", authRouter.router);
 server.use("/products", auth, productRouter.router);
 server.use("/products/ratings", auth, ratingReviewsRouter.router);
+server.use("/auth", authRouter.router);
 
 server.listen(process.env.PORT, () => {
   console.log(`Server Started Successfully on port ${process.env.PORT}`);
