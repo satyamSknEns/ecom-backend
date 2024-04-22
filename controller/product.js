@@ -87,7 +87,10 @@ exports.getAllProducts = async (req, res) => {
         totalRating: 0,
         ratingCount: 0,
       };
-      const averageRating = ratingCount > 0 ? parseFloat((totalRating / ratingCount).toFixed(1)) : 0;
+      const averageRating =
+        ratingCount > 0
+          ? parseFloat((totalRating / ratingCount).toFixed(1))
+          : 0;
       if (averageRating !== 0) {
         product.rating = averageRating;
         await product.save();
@@ -103,11 +106,19 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.getProduct = async (req, res) => {
-  const id = req.params.id;
-  console.log({ id });
-  const product = await Product.findById(id);
-  res.json(product);
+  const id = req.query.productId;
+  try {
+    const product = await Product.findOne({ productId: id });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
+
 exports.replaceProduct = async (req, res) => {
   const id = req.params.id;
   try {
