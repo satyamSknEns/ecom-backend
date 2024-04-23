@@ -119,6 +119,20 @@ exports.getProduct = async (req, res) => {
   }
 };
 
+exports.getCollection = async (req, res) => {
+  const collectionName = req.query.category;
+  try {
+    const collection = await Product.find({ category: collectionName });
+    if (!collection) {
+      return res.status(404).json({ message: "Collection not found" });
+    }
+    res.status(200).json({ success: true, data: collection });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 exports.replaceProduct = async (req, res) => {
   const id = req.params.id;
   try {
