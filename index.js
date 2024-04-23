@@ -23,7 +23,7 @@ main().catch((err) => console.log(err));
 console.log("process.env.MONGO_URL", process.env.MONGO_URL);
 
 async function main() {
-  await mongoose.connect('mongodb+srv://Hackers96:EK5jqqC4Tcysu6OX@cluster0.vav7opp.mongodb.net/ecommerce');
+  await mongoose.connect(process.env.MONGO_URL);
   console.log("Database Connected Successfully");
 }
 
