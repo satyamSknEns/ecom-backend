@@ -167,3 +167,57 @@ exports.deleteProduct = async (req, res) => {
     res.status(400).json(err);
   }
 };
+
+exports.filterProducts = async (req, res) => {
+  try {
+    const { priceOrder, ratingOrder, stockOrder, titleOrder, discountOrder, brand, category, } = req.query;
+    let filter = {};
+    let sortCriteria = {};
+
+    if (priceOrder === "asc" || priceOrder === "desc") {
+      sortCriteria.price = priceOrder === "asc" ? 1 : -1;
+    }
+
+    if (ratingOrder === "asc" || ratingOrder === "desc") {
+      sortCriteria.rating = ratingOrder === "asc" ? 1 : -1;
+    }
+
+    if (stockOrder === "asc" || stockOrder === "desc") {
+      sortCriteria.stock = stockOrder === "asc" ? 1 : -1;
+    }
+
+    if (discountOrder === "asc" || discountOrder === "desc") {
+      sortCriteria.discountPercentage = discountOrder === "asc" ? 1 : -1;
+    }
+
+    if (titleOrder === "asc" || titleOrder === "desc") {
+      sortCriteria.title = titleOrder === "asc" ? 1 : -1;
+    }
+
+    if (brand) {
+      filter.brand = brand;
+    }
+
+    if (category) {
+      filter.category = category;
+    }
+
+    console.log('filter', filter);
+
+    // If neither brand nor category is provided, show all products for those fields
+    if (!brand && !category) {
+      const allBrands = await Product.distinct("brand");
+      const allCategories = await Product.distinct("category");
+      filter.$or = [
+        { brand: { $in: allBrands } },
+        { category: { $in: allCategories } },
+      ];
+    }
+
+    const filteredProducts = await Product.find(filter).sort(sortCriteria);
+    res .status(200) .json({ success: true, count: filteredProducts.length, data: filteredProducts, });
+  } catch (error) {
+    console.error("Error in filtering products:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
