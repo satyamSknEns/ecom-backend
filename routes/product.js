@@ -10,6 +10,7 @@ router
   .get('/getcollection', productController.getCollection)
   .put('/:id', productController.replaceProduct)
   .patch('/:id', productController.updateProduct)
-  .delete('/:id', productController.deleteProduct);
+  .delete('/:id', productController.deleteProduct)
+  .get('/filter', productController.filterProducts);
 
 exports.router = router;  
